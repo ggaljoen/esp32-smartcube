@@ -11,6 +11,8 @@
 // INCLUDES
 // ESP32 library for Bluetooth LE
 #include "BLEDevice.h"
+#include "M5Atom.h"
+
 
 // CONSTANTS
 // The MAC address of the Rubik's Cube
@@ -46,6 +48,8 @@ static uint8_t array3[8];
 static int array4[12];
 static int array5[16];
 uint8_t testtt[16] = {0x12,0x34,0x56,0x78,0x33,0x33,0x33,0x33,0x12,0x34,0x56,0x78,0x9a,0xbc,0x00,0x00};
+const int atom[9] = {6,7,8,11,12,13,16,17,18};
+static int colour;
 
 
 // HELPER FUNCTIONS
@@ -335,6 +339,36 @@ uint8_t converseToPaperType() {
       Serial.println(cube[i]);
     }
     Serial.println(" - converseToPaperType - END");
+    for (int i=1; i<10; i++) {
+      
+      switch (cube[i])
+      {
+        case 1:
+          colour = 0xFF0000;
+          break;
+        case 2:
+          colour = 0xFFFF00;
+          break;
+        case 3:
+          colour = 0x00FF00;
+          break;
+        case 4:
+          colour = 0xFFFFFF;
+          break;
+        case 5:
+          colour = 0x55FF00;
+          break;
+        case 6:
+          colour = 0x0000FF;
+          break;
+      };
+
+      
+      M5.dis.drawpix(atom[i-1], colour);
+
+    }
+    M5.update();
+
 };
 
 
@@ -515,6 +549,7 @@ void scanForDevices(){
 
 // Initial setup
 void setup() {
+  M5.begin(true, false, true);
   // Start the serial connection to be able to track debug data
   Serial.begin(115200);
   Serial.print("Initialising BLE...");
